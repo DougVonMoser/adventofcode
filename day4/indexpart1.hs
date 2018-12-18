@@ -7,24 +7,13 @@ import qualified Data.Map.Strict as Map
 
 main = do 
     input <- readFile "input.txt"
-    print   $ (\(b, m, _) -> b * m )
-            $ Map.foldlWithKey finish2 (0,0,0)
-            -- $ finishHim
+    print
+            $ finishHim
             $ (\(_,_,x) -> x)
             $ foldl foldingFunc (Down, 0, Map.empty)
             $ sortBy (\(t1, _) (t2, _) -> compare t1 t2) 
             $ map parseInput
             $ lines input
-type Badge = Int
-type Minute = Int 
-type Sleep = Int 
-type RightStuff = (Badge, Minute, Sleep)
-
-finish2 :: RightStuff -> Int -> Map.Map Int Int -> RightStuff 
-finish2 (wiwinnbadge, winmin, winsleep) currbadge currmap = 
-    let (currMin, currSleep) = Map.foldlWithKey (\(wmin, wsleep) min sleep -> if sleep > wsleep then (min, sleep) else (wmin, wsleep) ) (0, 0) currmap
-    in
-        if currSleep > winsleep then (currbadge, currMin, currSleep) else (wiwinnbadge, winmin, winsleep)
 
 finishHim :: Stuf -> Int
 finishHim hunk = 
