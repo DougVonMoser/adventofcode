@@ -1,18 +1,32 @@
 import qualified Data.Map.Strict as Map
 import Debug.Trace
+import Data.Char
 
 main =  do
     input <- readFile "input.txt"
     print  
-            $ length $ runner
+            $ humbug 
             $ unwords $ words input 
+
+
+humbug hunk = 
+    let maxInt = maxBound :: Int 
+    in
+        foldl (humFolder hunk) maxInt ['a'..'z'] 
+
+humFolder :: String -> Int -> Char -> Int
+humFolder hunk winningCount currChar =
+    let tester = toUpper currChar : [currChar]
+        thisCount = runner $ filter (not . flip elem tester) hunk
+    in 
+       if thisCount < winningCount then thisCount else winningCount 
 
 doer :: String -> String
 doer = foldl folder [] 
 
-runner :: String -> String
+runner :: String -> Int
 runner x =
-    runHelp x $ length x 
+    length $ runHelp x $ length x 
     
 runHelp :: String -> Int -> String 
 runHelp hunk len = 
